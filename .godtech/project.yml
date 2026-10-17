@@ -1,8 +1,0 @@
-project:
-  state: active
-  priority: high
-  current_focus: "Public ABE TechLab product-studio website"
-  next_step: "Keep public site aligned with current ABE TechLab services, intake and project narrative"
-  blockers: []
-  status_note: "Public-facing lab workspace and documentation surface."
-  last_worked_on: "2026-09-04"
