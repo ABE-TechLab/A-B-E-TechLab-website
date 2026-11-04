@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && node scripts/abe-template-mirror.mjs && next dev",
-    "build": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && node scripts/abe-template-mirror.mjs && next build",
+    "dev": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && node scripts/abe-template-mirror.mjs && node scripts/abe-audit-navigation.mjs && next dev",
+    "build": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && node scripts/abe-template-mirror.mjs && node scripts/abe-audit-navigation.mjs && next build",
     "start": "next start",
     "lint": "tsc --noEmit"
   },
