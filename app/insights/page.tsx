@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import {insights} from "@/lib/insights";
 import InsightsExplorer from "@/components/InsightsExplorer";
-export const metadata:Metadata={title:"Insights | ABE TechLab",description:"Original ABE TechLab research, strategy, technology and product articles.",alternates:{canonical:"/insights"}};
+export const metadata:Metadata={title:"Insights",description:"Original ABE TechLab research, strategy, technology and product articles.",alternates:{canonical:"/insights"}};
 export default function InsightsPage(){return <div className="abe-page">
  <section className="abe-hero"><div className="abe-wrap">
   <p className="abe-eyebrow"><span className="abe-dot"/> Studio notes / Research & thinking</p>

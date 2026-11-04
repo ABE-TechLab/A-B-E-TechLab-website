@@ -14,7 +14,7 @@ export function generateStaticParams(){return cases.map(x=>({slug:x.slug}));}
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
  const {slug}=await params;const item=cases.find(x=>x.slug===slug);if(!item)return{};
  const project=projects.find(x=>x.name===item.name);
- return {title:item.name+" | ABE TechLab Selected Work",description:project?.description??item.discipline,alternates:{canonical:"/work/"+slug}};
+ return {title:item.name+" | Selected Work",description:project?.description??item.discipline,alternates:{canonical:"/work/"+slug}};
 }
 export default async function WorkDetailPage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params;const item=cases.find(x=>x.slug===slug);if(!item)notFound();

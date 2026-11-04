@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import Link from "next/link";
 import {ArrowUpRight} from "lucide-react";
-export const metadata:Metadata={title:"Products | ABE TechLab",description:"Discover TechTrack, Portfolio Platform and MeetMind / Vertica, products developed under ABE TechLab.",alternates:{canonical:"/products"}};
+export const metadata:Metadata={title:"Products",description:"Discover TechTrack, Portfolio Platform and MeetMind / Vertica, products developed under ABE TechLab.",alternates:{canonical:"/products"}};
 const products=[
  {number:"01",name:"TechTrack",category:"Education technology",status:"Active product",description:"A practical learning and development platform connecting courses, bootcamps, internships and technology programmes in a coherent learning experience.",href:"/programs",cta:"Explore the programmes",work:["Structured learning","Bootcamps","Internships","Technology education"]},
  {number:"02",name:"Portfolio Platform",category:"Professional identity technology",status:"In development",description:"A product system for building professional identities, portfolios and career-focused profiles through a shareable destination.",href:"/contact",cta:"Ask about the product",work:["Professional profiles","Digital identity","Portfolio creation"]},

@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {ArrowUpRight} from "lucide-react";
 import TechTrackKidsShowcase from "@/components/TechTrackKidsShowcase";
-export const metadata:Metadata={title:"Programs | TechTrack | ABE TechLab",description:"Practical technology programmes from ABE TechLab: TechTrack Learn, Bootcamp, Internship, Kids and future learning experiences.",alternates:{canonical:"/programs"}};
+export const metadata:Metadata={title:"Programs | TechTrack",description:"Practical technology programmes from ABE TechLab: TechTrack Learn, Bootcamp, Internship, Kids and future learning experiences.",alternates:{canonical:"/programs"}};
 const programs=[
  {number:"01",name:"TechTrack Learn",type:"Practical technology learning",description:"Structured learning for people building practical technology skills through guided lessons, projects and continuous development."},
  {number:"02",name:"TechTrack Bootcamp",type:"Intensive, cohort-based learning",description:"Technology programmes built around structured learning, practical tasks, projects, guided development and delivery."},

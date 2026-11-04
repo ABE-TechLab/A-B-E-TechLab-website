@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {ArrowUpRight, Cpu} from "lucide-react";
 import {team} from "@/data/team";
-export const metadata:Metadata={title:"Team | ABE TechLab",description:"Meet ABE TechLab founder Ayo Richard ABE and ARIA, an AI research and product partner, plus the studio's approach to collaboration.",alternates:{canonical:"/team"}};
+export const metadata:Metadata={title:"Team",description:"Meet ABE TechLab founder Ayo Richard ABE and ARIA, an AI research and product partner, plus the studio's approach to collaboration.",alternates:{canonical:"/team"}};
 export default function TeamPage(){return <div className="abe-page">
  <section className="abe-hero"><div className="abe-wrap"><p className="abe-eyebrow"><span className="abe-dot"/> People and systems</p><h1>Human thinking. <em>AI-assisted.</em></h1><p className="abe-hero-sub">A product studio combining human leadership with AI-assisted research, strategy and technology. Specialists join collaborations as the work evolves.</p><div className="abe-hero-rule"><span>Leadership / Research / Collaboration</span><span>A growing studio</span></div></div></section>
  <section className="abe-section"><div className="abe-wrap"><div className="abe-section-heading" style={{marginBottom:38}}><h2>Behind the <span style={{color:"#789e21"}}>work.</span></h2><p>Our current studio profile distinguishes human people from AI systems.</p></div>
