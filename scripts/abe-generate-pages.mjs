@@ -45,7 +45,7 @@ function page(title,description,main){
  let head=sourceHead.replace("<title>ABE TechLab</title>","<title>"+escape(title)+" | ABE TechLab</title>")
  .replace("</head>",'<meta name="description" content="'+escape(description)+'"><link rel="stylesheet" href="/abe-unified.css"></head>');
  const html='<!doctype html><html lang="en">'+head+'<body><a class="abex-skip" href="#main">Skip to content</a>'+header+'<main id="main" class="abex">'+main+'</main>'+footWrap+
- '<script defer src="/abe-unified.js"></script><script defer src="/abe-piano.js"></script><script defer src="/abe-assistant-static.js"></script><script defer src="/abe-persistent-shell.js"></script></body></html>';
+ '<script defer src="/abe-unified.js"></script><script defer src="/abe-piano.js"></script><script defer src="/abe-assistant-static.js"></script></body></html>';
  return html;
 }
 const hero=(label,title,description,tail="Product research · Strategy · Design · Development")=>
@@ -57,8 +57,8 @@ const card=(i,meta,title,desc,href,action="Explore")=>
 const grid=(items,three=false)=>'<div class="abex-grid'+(three?" three":"")+'">'+items.join("")+'</div>';
 async function save(route,html){const file=join("public/abe-rendered",route.replace(/^\//,""),"index.html");await mkdir(dirname(file),{recursive:true});await writeFile(file,html);return file;}
 
-const products=await readVariable("app/products/page.tsx","products");
-const programs=await readVariable("app/programs/page.tsx","programs");
+const products=await readVariable("data/products.ts","products");
+const programs=await readVariable("data/programs.ts","programs");
 const team=await readVariable("data/team.ts","team");
 const projects=await readVariable("data/content.ts","projects");
 const categories=["All","Research","Product","Technology","Perspectives"];
@@ -133,8 +133,7 @@ await save("contact",page("Contact","Contact ABE TechLab for product research, s
 
 // Keep the original legal text while presenting it inside the identical shell.
 for(const [route,title] of [["privacy","Privacy Policy"],["terms","Terms of Use"],["cookies","Cookie Policy"]]){
- const raw=await readFile("app/"+route+"/page.tsx","utf8");
- const article=raw.match(/<article className="abe-legal-prose">([\s\S]*?)<\/article>/)?.[1];
+ const article=await readFile("data/legal/"+route+".html","utf8");
  if(!article)throw Error("Legal content missing: "+route);
  const content=article.replace(/<h2>/g,'<h2 style="font:600 32px Archivo,Arial,sans-serif;margin:45px 0 16px">').replace(/<\/h2>/g,"</h2>");
  await save(route,page(title,title+" and information from ABE TechLab.",hero("ABE TechLab / Legal",escape(title),"Website policies and information.")+
@@ -147,9 +146,9 @@ for(const file of await discover("public/template")){
  let html=await readFile(file,"utf8");
  html=useUnifiedNav(html);
  if(!html.includes("/abe-unified.css"))html=html.replace("</head>",'<link rel="stylesheet" href="/abe-unified.css"></head>');
- html=html.replaceAll('<script defer src="/abe-frontend-bridge.js"></script>',"");
+
  if(!html.includes("/abe-unified.js"))html=html.replace("</body>",'<script defer src="/abe-unified.js"></script></body>');
- if(!html.includes("/abe-persistent-shell.js"))html=html.replace("</body>",'<script defer src="/abe-persistent-shell.js"></script></body>');
+
  await writeFile(file,html);
 }
 console.log("ABE: all Framer pages unified; built contact, insights, product, programme, team, work and legal pages using the same Framer shell.");

@@ -190,3 +190,7 @@ html.abe-mirror-ready .abe-template .cgpo .cg-hd-i.abe-shown{opacity:1!important
  html.abe-mirror-ready .abe-template .cgpo .cg-hd-i{opacity:1!important;translate:none!important;transition:none!important}
  .abe-template .cgbl-card,.abe-editorial-art,.abe-editorial-art>img{transition:none!important;transform:none!important}
 }
+
+/* No invisible content when the component animation script is unavailable. */
+html:not(.abe-mirror-ready) .abe-template [style*="opacity:0"]{opacity:1!important;translate:none!important}
+html:not(.abe-mirror-ready) .abe-template [data-mirror-reveal]{opacity:1!important;translate:none!important}

@@ -78,8 +78,8 @@ async function update(route,markup){
  if(!result.includes("/abe-template-mirror.js"))result=result.replace("</body>",'<script defer src="/abe-template-mirror.js"></script></body>');
  await writeFile(file,result);
 }
-const products=await variable("app/products/page.tsx","products");
-const programs=await variable("app/programs/page.tsx","programs");
+const products=await variable("data/products.ts","products");
+const programs=await variable("data/programs.ts","programs");
 const team=await variable("data/team.ts","team");
 const projects=await variable("data/content.ts","projects");
 const entries=(await readdir("lib/insights/articles")).filter(x=>x.endsWith(".ts"));

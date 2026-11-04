@@ -3,7 +3,6 @@
  */
 (function(){
   "use strict";
-  if(window.self!==window.top)return;
   if(window.__abePianoLoaded)return;
   window.__abePianoLoaded=true;
   var KEY="abe-techlab-sound-enabled";

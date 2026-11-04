@@ -365,9 +365,7 @@ for(const root of roots){
     if(file.endsWith(".html")&&!next.includes("abe-unverified-proof")){
       next=next.replace("</head>",'<style id="abe-unverified-proof">[data-framer-name="CgReviews"]{display:none!important}</style></head>');
     }
-    if(file.endsWith(".html")&&!next.includes("/abe-frontend-bridge.js")){
-      next=next.replace("</body>",'<script defer src="/abe-frontend-bridge.js"></script></body>');
-    }
+
     checked++;
     if(next!==previous){
       await writeFile(file,next);
