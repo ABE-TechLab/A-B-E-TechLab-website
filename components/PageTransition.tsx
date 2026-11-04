@@ -69,7 +69,7 @@ export function PageTransition() {
         <span className="page-transition-ring page-transition-ring-one" />
         <span className="page-transition-ring page-transition-ring-two" />
         <span className="page-transition-logo">
-          <img src="/icon.svg" alt="" width="52" height="52" />
+          <img src="/brand/abe-techlab-mark-light.svg" alt="" width="52" height="52" />
         </span>
       </div>
       <div className="page-transition-copy">

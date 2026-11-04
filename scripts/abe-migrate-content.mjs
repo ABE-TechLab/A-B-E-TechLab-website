@@ -287,6 +287,25 @@ const editorialCorrections = [
  ["ABE TechLab opens in Nigeria with its first startup client.","ABE TechLab starts from user needs and practical product problems."],
  ["A milestone release, and a bigger studio on South Congress.","Products and delivery approaches evolve as requirements change."]
 ];
+
+function applyBranding(out,file) {
+  // Official working palette from ABE-TechLab/Branding (brand package under review).
+  out=out.replace(/#ff5a1f/gi,"#A7E021")
+    .replace(/#efede8/gi,"#F9F9F6")
+    .replace(/#0d0d0f/gi,"#111111")
+    .replace(/rgba\(\s*255\s*,\s*90\s*,\s*31/gi,"rgba(167,224,33")
+    .replace(/rgb\(\s*255\s*,\s*90\s*,\s*31\s*\)/gi,"rgb(167,224,33)")
+    .replace(/ABE TechLab opens in Nigeria with its first startup client\./g,"ABE TechLab starts from real user needs and practical product problems.");
+  if(file.endsWith(".html")){
+    out=out.replace(/<link href="https:\/\/framerusercontent\.com\/images\/[^"]+" rel="icon"[^>]*>/g,'<link rel="icon" type="image/svg+xml" href="/brand/abe-techlab-mark-light.svg">')
+      .replace(/<link rel="apple-touch-icon" href="https:\/\/framerusercontent\.com\/images\/[^"]+"[^>]*>/g,'<link rel="apple-touch-icon" href="/brand/abe-techlab-mark-light.svg">');
+    var style='<style id="abe-brand-identity">.cghd-logo .cghd-mark{display:none!important}.cghd-logo:before{content:"";display:inline-block;width:34px;height:30px;flex:none;background:url(/brand/abe-techlab-mark-light.svg) center/contain no-repeat}.cghd.is-dark .cghd-logo:before{background-image:url(/brand/abe-techlab-mark-dark.svg)}.cgft .cgft-mark{background-image:url(/brand/abe-techlab-mark-dark.svg)!important;background-position:center;background-size:contain;background-repeat:no-repeat}.cgft .cgft-mark>*{visibility:hidden}a:focus-visible,button:focus-visible{outline-color:#A7E021!important}</style>';
+    out=out.replace("</head>",style+"</head>");
+    if(!out.includes("/abe-piano.js"))out=out.replace("</body>",'<script defer src="/abe-piano.js"></script><script defer src="/abe-assistant-static.js"></script></body>');
+  }
+  return out;
+}
+
 const replacementPairs=[...common,...editorialCorrections,...links].sort((a,b)=>b[0].length-a[0].length);
 function transform(input){
   let out=input;
@@ -308,7 +327,7 @@ let changed=0, checked=0;
 for(const root of roots){
   for(const file of await walk(root)){
     const previous=await readFile(file,"utf8");
-    let next=transform(previous);
+    let next=applyBranding(transform(previous),file);
     if(file.endsWith("/template/about/index.html")){
       const steps={"2016":"01","2018":"02","2019":"03","2021":"04","2023":"05","2024":"06","2026":"07"};
       next=next.replace(/>(2016|2018|2019|2021|2023|2024|2026)</g,(m,y)=>">"+steps[y]+"<");

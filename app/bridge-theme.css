@@ -1,23 +1,10 @@
-/* Bridge theme for the original interactive ABE pages.
-   The separately served Framer snapshots preserve their own original CSS. */
-:root {
-  --bg:#efede8;
-  --ink:#0d0d0f;
-  --muted:#77716a;
-  --line:#d9d6cf;
-  --accent:#ff5a1f;
-  --accent-soft:rgba(255,90,31,.15);
-  --accent-border:rgba(255,90,31,.72);
-}
-body {background:var(--bg);}
-.site-nav-link::after,.mobile-nav-link::after,.brand-accent-dot,.accent-marker {background:#ff5a1f;}
-.brand-accent-dot {box-shadow:0 0 0 3px rgba(255,90,31,.13);}
-.site-nav-link:hover,.site-nav-link.is-active {color:#0d0d0f;}
-.btn-primary,.btn-primary:hover {background:#0d0d0f!important;border-color:#0d0d0f!important;color:#efede8!important;}
-.btn-primary:focus-visible,.btn-secondary:focus-visible {outline-color:#ff5a1f;}
-.hero-shell::before {background:radial-gradient(circle at 85% 20%,rgba(255,90,31,.11),transparent 24%),linear-gradient(135deg,#f3eee7 0%,#e9e4dc 100%);}
-.hero-shell::after {background:linear-gradient(90deg,rgba(255,255,255,.09),transparent 18%,transparent 82%,rgba(255,90,31,.05));}
-[class*="bg-[#b7ff3c]"] {background-color:#ff5a1f!important;}
-[class*="text-[#b7ff3c]"] {color:#ff5a1f!important;}
-[class*="border-[#b7ff3c]"] {border-color:#ff5a1f!important;}
-::selection {background:#ff5a1f;color:#0d0d0f;}
+/* Shared ABE TechLab palette for legacy functionality retained under the new UI.
+ * Brand package: ABE-TechLab/Branding/brands/abe-techlab (working, pending approval). */
+:root{--bg:#F9F9F6;--ink:#111111;--muted:#686962;--line:#d9d6cf;--accent:#A7E021;--accent-soft:rgba(167,224,33,.15);--accent-border:rgba(167,224,33,.72)}
+body{background:var(--bg)}
+.brand-accent-dot,.accent-marker{background:#A7E021}
+.btn-primary:focus-visible,.btn-secondary:focus-visible{outline-color:#A7E021}
+[class*="bg-[#b7ff3c]"]{background-color:#A7E021!important}
+[class*="text-[#b7ff3c]"]{color:#A7E021!important}
+[class*="border-[#b7ff3c]"]{border-color:#A7E021!important}
+::selection{background:#A7E021;color:#111}

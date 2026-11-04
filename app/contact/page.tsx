@@ -1,40 +1,98 @@
 "use client";
-import { FormEvent, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-import HeroVisualCarousel from '@/components/HeroVisualCarousel';
-import MobileContactForm from '@/components/MobileContactForm';
+import {FormEvent,useState} from "react";
+import {ArrowUpRight,CheckCircle2} from "lucide-react";
+import MobileContactForm from "@/components/MobileContactForm";
 
-const needs=['New product idea','Website or web application','Product research / strategy','Product marketing / positioning','Product design','Development','Product management','Education / teaching technology','Existing product improvement','Something else'];
-const followUpChannels=[
-  {value:'website_chat',label:'Chat with our assistant here',description:'Open the assistant on this website after you submit.'},
-  {value:'whatsapp',label:'Continue on WhatsApp',description:'Open WhatsApp with your enquiry ready to continue.'},
-  {value:'voice_call',label:'Call our AI assistant',description:'Get a call button after you submit and speak directly with the assistant.'},
-  {value:'email',label:'Continue by email',description:'The assistant will email you and continue when you reply.'},
+const needs=["New product idea","Website or web application","Product research / strategy","Product marketing / positioning","Product design","Development","Product management","Education / teaching technology","Existing product improvement","Something else"];
+const channels=[
+ {value:"website_chat",label:"Website chat",description:"Continue with the assistant here"},
+ {value:"whatsapp",label:"WhatsApp",description:"Continue the conversation in WhatsApp"},
+ {value:"voice_call",label:"Voice call",description:"Speak with the AI assistant"},
+ {value:"email",label:"Email",description:"Continue the conversation by email"}
 ];
-const heroVisuals=[{src:'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Developer working with code on a laptop'},{src:'https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Developer working with a laptop and smartphone'},{src:'https://images.pexels.com/photos/7988758/pexels-photo-7988758.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Technology team discussing a project'}];
-
 type ChannelLinks={whatsapp:string|null;call:string|null};
-const EMPTY_LINKS:ChannelLinks={whatsapp:null,call:null};
-
-export default function Contact(){
- const [sending,setSending]=useState(false); const [status,setStatus]=useState<'idle'|'success'|'error'>('idle'); const [leadId,setLeadId]=useState<string|null>(null); const [selectedChannel,setSelectedChannel]=useState(''); const [assistantStarted,setAssistantStarted]=useState(false); const [channelLinks,setChannelLinks]=useState<ChannelLinks>(EMPTY_LINKS);
- async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();if(sending)return;setSending(true);setStatus('idle');const form=e.currentTarget;const data=Object.fromEntries(new FormData(form).entries());const channel=String(data.preferred_channel||'');setSelectedChannel(channel);try{const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw new Error(result.error||'Request failed');const id=String(result.lead_id||'');if(id){setLeadId(id);window.localStorage.setItem('abe_assistant_lead_id',id);window.dispatchEvent(new Event('abe-assistant-context'));}setAssistantStarted(Boolean(result.assistant?.started));setChannelLinks({whatsapp:result.assistant?.whatsapp??null,call:result.assistant?.call??null});if(channel==='website_chat')window.dispatchEvent(new Event('abe-assistant-open'));form.reset();setStatus('success')}catch{setStatus('error')}finally{setSending(false)}}
- return <div>
-  <section className="relative overflow-hidden grid-bg"><HeroVisualCarousel visuals={heroVisuals}/><div className="container relative z-10 py-20 md:py-32"><p className="text-xs font-semibold uppercase tracking-[.18em] text-black/45">Contact</p><h1 className="font-display mt-5 max-w-5xl text-5xl font-semibold leading-[.9] tracking-[-.07em] sm:text-6xl md:mt-6 md:text-8xl">Let's talk about what you're building.</h1><p className="mt-6 max-w-xl text-base leading-7 text-black/55 md:mt-8 md:text-lg">Have a product idea, an education technology concept, an existing platform, a research question or a problem you're trying to solve? You don't need a perfect brief to start.</p></div></section>
-  <section className="container py-16 md:py-28"><div className="mobile-only-scan"><div className="rounded-[2px] border border-black/10 bg-white/50 p-5 shadow-[0_18px_50px_rgba(17,17,15,.05)]"><MobileContactForm /></div></div>
-   <div className="desktop-only-scan grid gap-16 md:grid-cols-[.7fr_1.3fr]"><div><p className="text-sm leading-7 text-black/55">Tell us what you know. A problem, an idea or a rough direction is enough to begin the conversation. We'll use the details to understand where we can help.</p><div className="mt-10 border-t border-black/10 pt-6"><p className="text-xs font-semibold uppercase tracking-[.16em] text-black/40">Typical starting points</p><div className="mt-4 flex flex-wrap gap-2">{['Research','Strategy','Product marketing','Design','Development','Education technology'].map(x=><span key={x} className="border border-black/10 px-3 py-2 text-xs text-black/55">{x}</span>)}</div></div></div>
-    <form onSubmit={submit} className="space-y-8" aria-busy={sending}>
-     {([['name','Name','text'],['email','Email','email'],['phone','Phone number','tel'],['company','Company / Organization','text']] as const).map(([id,label,type])=><label key={id} className="block"><span className="mb-2 block text-xs font-semibold uppercase tracking-[.14em] text-black/45">{label}</span><input required={id==='name'||id==='email'} id={id} name={id} type={type} autoComplete={id==='phone'?'tel':id==='email'?'email':id==='name'?'name':'organization'} className="w-full border-b border-black/20 bg-transparent px-0 py-3 outline-none transition focus:border-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b7ff3c]"/></label>)}
-     <fieldset><legend className="mb-4 text-xs font-semibold uppercase tracking-[.14em] text-black/45">What do you need help with?</legend><div className="grid gap-2 sm:grid-cols-2">{needs.map(need=><label key={need} className="flex cursor-pointer items-center gap-3 border border-black/10 bg-white/40 px-4 py-3 text-sm text-black/60 transition hover:border-black/25 hover:bg-white focus-within:border-[#b7ff3c]"><input type="radio" name="need" value={need} required className="accent-black"/>{need}</label>)}</div></fieldset>
-     <label className="block"><span className="mb-2 block text-xs font-semibold uppercase tracking-[.14em] text-black/45">Expected timeline</span><select name="timeline" required className="w-full border-b border-black/20 bg-transparent px-0 py-3 outline-none transition focus:border-black focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#b7ff3c]"><option value="">Select if you know</option><option>As soon as possible</option><option>Within 1–3 months</option><option>Within 3–6 months</option><option>Exploring / no fixed timeline</option></select></label>
-     <label className="block"><span className="mb-2 block text-xs font-semibold uppercase tracking-[.14em] text-black/45">Tell us about the project</span><textarea required name="message" rows={6} placeholder="What are you trying to build, research or improve?" className="w-full resize-none border-b border-black/20 bg-transparent px-0 py-3 outline-none transition placeholder:text-black/25 focus:border-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b7ff3c]"/></label>
-     <fieldset><legend className="mb-4 text-xs font-semibold uppercase tracking-[.14em] text-black/45">How would you like to continue?</legend><p className="mb-4 text-sm leading-6 text-black/50">Choose where you'd like our assistant to continue the conversation after you submit.</p><div className="grid gap-2 sm:grid-cols-2">{followUpChannels.map(channel=><label key={channel.value} className="flex cursor-pointer items-start gap-3 border border-black/10 bg-white/40 px-4 py-4 text-sm text-black/65 transition hover:border-black/25 hover:bg-white focus-within:border-[#b7ff3c]"><input type="radio" name="preferred_channel" value={channel.value} required className="mt-1 accent-black"/><span><span className="block font-medium text-black/75">{channel.label}</span><span className="mt-1 block text-xs leading-5 text-black/45">{channel.description}</span></span></label>)}</div></fieldset>
-     <button type="submit" disabled={sending} aria-disabled={sending} className="btn-primary inline-flex items-center gap-2 px-6 py-4 text-sm font-semibold transition disabled:cursor-wait disabled:opacity-60 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#b7ff3c]">{sending?'Sending…':'Send enquiry'} <ArrowUpRight size={16}/></button>
-     <div aria-live="polite" aria-atomic="true">
-       {status==='success'&&<div className="space-y-3"><p className="text-sm leading-6 text-black/55">Thanks. Your enquiry is in. {assistantStarted?'The assistant has started the selected follow-up.':'Your selected continuation route is ready.'}</p>{selectedChannel==='whatsapp'&&(channelLinks.whatsapp?<a href={channelLinks.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border border-black/15 px-4 py-3 text-sm font-semibold">Continue on WhatsApp <ArrowUpRight size={15}/></a>:<p className="text-xs text-black/45">WhatsApp is not configured on the assistant yet.</p>)}{selectedChannel==='voice_call'&&(channelLinks.call?<a href={channelLinks.call} className="inline-flex items-center gap-2 border border-black/15 px-4 py-3 text-sm font-semibold">Call the AI assistant <ArrowUpRight size={15}/></a>:<p className="text-xs text-black/45">The AI phone number is not configured yet.</p>)}{selectedChannel==='website_chat'&&<p className="text-xs text-black/45">The Assistant chat has been opened for you.</p>}{selectedChannel==='email'&&<p className="text-xs text-black/45">Check your inbox. The Assistant will continue when you reply.</p>}</div>}
-       {status==='error'&&<p className="text-sm leading-6 text-black/55" role="alert">We couldn't send the enquiry right now. Please try again shortly.</p>}
+export default function ContactPage(){
+ const [sending,setSending]=useState(false);
+ const [status,setStatus]=useState<"idle"|"success"|"error">("idle");
+ const [error,setError]=useState("");
+ const [channel,setChannel]=useState("");
+ const [links,setLinks]=useState<ChannelLinks>({whatsapp:null,call:null});
+ const [assistantStarted,setAssistantStarted]=useState(false);
+ async function submit(event:FormEvent<HTMLFormElement>){
+  event.preventDefault();if(sending)return;
+  const form=event.currentTarget;
+  const data=Object.fromEntries(new FormData(form).entries());
+  const selected=String(data.preferred_channel||"");
+  if((selected==="whatsapp"||selected==="voice_call")&&!String(data.phone||"").trim()){
+   setStatus("error");setError("Please add your phone number to choose WhatsApp or a voice call.");return;
+  }
+  setSending(true);setStatus("idle");setError("");
+  try{
+   const response=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+   const result=await response.json();
+   if(!response.ok)throw new Error(result.error||"We could not deliver the enquiry.");
+   const id=String(result.lead_id||"");
+   if(id){window.localStorage.setItem("abe_assistant_lead_id",id);window.dispatchEvent(new Event("abe-assistant-context"));}
+   setAssistantStarted(Boolean(result.assistant?.started));
+   setLinks({whatsapp:result.assistant?.whatsapp??null,call:result.assistant?.call??null});
+   setChannel(selected);setStatus("success");form.reset();
+   if(selected==="website_chat")window.dispatchEvent(new Event("abe-assistant-open"));
+  }catch(err){setStatus("error");setError(err instanceof Error?err.message:"Please try again.");}
+  finally{setSending(false);}
+ }
+ return <div className="abe-page">
+  <section className="abe-hero"><div className="abe-wrap">
+   <p className="abe-eyebrow"><span className="abe-dot"/> Contact / ABE TechLab</p>
+   <h1>What are you <em>building?</em></h1>
+   <p className="abe-hero-sub">Tell us about an idea, a research problem, a product or a technology challenge. You do not need a finished brief to begin.</p>
+   <div className="abe-hero-rule"><span>Research / Strategy / Design / Development</span><span>Enquiry form ↓</span></div>
+  </div></section>
+  <section className="abe-section"><div className="abe-wrap abe-contact-grid">
+   <aside className="abe-contact-info">
+    <p className="abe-eyebrow"><span className="abe-dot"/> Start a conversation</p>
+    <h2>Useful products begin with a clear <span style={{color:"#789e21"}}>question.</span></h2>
+    <p>Bring the problem or idea. We&apos;ll work out the right next conversation, without asking you to have every detail figured out.</p>
+    <div style={{marginTop:38,borderTop:"1px solid #d0d0ca",paddingTop:25}}>
+     <p className="abe-eyebrow">What we can discuss</p>
+     <div className="abe-tags">{["Product research","Strategy & roadmaps","Product marketing","Design & development","Education technology","Existing software"].map(x=><span className="abe-tag" key={x}>{x}</span>)}</div>
+    </div>
+    <div style={{marginTop:38,borderTop:"1px solid #d0d0ca",paddingTop:25}}>
+     <p className="abe-eyebrow">Write directly</p>
+     <a href="mailto:abeayo6@gmail.com" style={{display:"inline-block",marginTop:14,fontSize:20,fontWeight:700,letterSpacing:"-.03em"}}>abeayo6@gmail.com ↗</a>
+     <p style={{marginTop:14,fontSize:13}}>Nigeria · Working globally</p>
+    </div>
+   </aside>
+   <div className="abe-contact-contact">
+    <div style={{borderBottom:"1px solid #d5d5cd",paddingBottom:22,marginBottom:30,display:"flex",justifyContent:"space-between",gap:16}}>
+     <div><p className="abe-eyebrow">New project enquiry</p><h2 style={{font:"800 clamp(26px,3vw,38px)/1.1 var(--abe-display)",letterSpacing:"-.05em",margin:"8px 0 0"}}>Tell us about it.</h2></div>
+     <span className="abe-dot" aria-hidden="true"/>
+    </div>
+    <div className="abe-mobile-form"><MobileContactForm/></div>
+    <form className="abe-contact-form abe-desktop-form" aria-busy={sending} onSubmit={submit}>
+     <div className="abe-grid" style={{gap:20}}>
+      {([["name","Your name","text"],["email","Work email","email"],["phone","Phone number","tel"],["company","Company / organisation","text"]] as const).map(([id,label,type])=><label key={id} className="abe-field"><span>{label}{(id==="name"||id==="email")?" *":""}</span><input id={id} name={id} type={type} required={id==="name"||id==="email"} autoComplete={id==="name"?"name":id==="email"?"email":id==="phone"?"tel":"organization"} placeholder={id==="phone"?"Include country code":""}/></label>)}
      </div>
+     <fieldset className="abe-field" style={{border:0,padding:0,margin:0}}><legend>What do you need help with? *</legend><div className="abe-radio-grid">{needs.map(need=><label key={need}><input type="radio" name="need" value={need} required/><span style={{margin:0,color:"#111",textTransform:"none",letterSpacing:0,font:"500 12px var(--abe-display)"}}>{need}</span></label>)}</div></fieldset>
+     <label className="abe-field"><span>Expected timeline *</span><select required name="timeline" defaultValue=""><option value="" disabled>Choose a timeline</option>{["As soon as possible","Within 1–3 months","Within 3–6 months","Exploring / no fixed timeline"].map(x=><option key={x}>{x}</option>)}</select></label>
+     <label className="abe-field"><span>Tell us about your project *</span><textarea name="message" rows={5} maxLength={5000} required placeholder="What are you looking to build, research or improve?"/></label>
+     <fieldset className="abe-field" style={{border:0,padding:0,margin:0}}><legend>How should we continue? *</legend>
+      <p className="abe-note" style={{margin:"0 0 14px"}}>Choose how you would like the assistant to continue the conversation.</p>
+      <div className="abe-radio-grid">{channels.map(item=><label key={item.value}><input type="radio" name="preferred_channel" value={item.value} required/><span style={{margin:0,color:"#111",textTransform:"none",letterSpacing:0,font:"500 12px var(--abe-display)"}}><strong style={{display:"block",marginBottom:3}}>{item.label}</strong><small>{item.description}</small></span></label>)}</div>
+     </fieldset>
+     <button type="submit" className="abe-button abe-button-lime" disabled={sending}>{sending?"Sending enquiry…":"Send your enquiry"}<ArrowUpRight size={18}/></button>
     </form>
+    <div aria-live="polite" aria-atomic="true">
+     {status==="error"&&<div className="abe-message abe-error" role="alert">{error}</div>}
+     {status==="success"&&<div className="abe-message" role="status">
+      <strong style={{display:"flex",gap:8,alignItems:"center"}}><CheckCircle2 size={18}/> Your enquiry was received.</strong>
+      <p>{assistantStarted?"The assistant has started the selected follow-up.":"Your selected follow-up is ready."}</p>
+      {channel==="whatsapp"&&(links.whatsapp?<a href={links.whatsapp} target="_blank" rel="noreferrer">Continue on WhatsApp ↗</a>:<p>WhatsApp follow-up is not configured yet.</p>)}
+      {channel==="voice_call"&&(links.call?<a href={links.call}>Call the assistant ↗</a>:<p>The assistant phone number is not configured yet.</p>)}
+      {channel==="website_chat"&&<p>The assistant window has opened for you.</p>}
+      {channel==="email"&&<p>Check your inbox to continue by email.</p>}
+     </div>}
+    </div>
    </div>
-  </section></div>
+  </div></section>
+ </div>;
 }

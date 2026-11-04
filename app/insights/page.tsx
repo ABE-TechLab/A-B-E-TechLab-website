@@ -1,7 +1,15 @@
-import Link from 'next/link';
-import { insights } from '@/lib/insights';
-import HeroVisualCarousel from '@/components/HeroVisualCarousel';
-export const metadata={title:'Insights | Research, Product, Technology & Perspectives',description:'Research, product thinking, technology and perspectives from ABE TechLab.',alternates:{canonical:'/insights'}};
-const categories=['Research','Product','Technology','Perspectives'] as const;
-const heroVisuals=[{src:'https://images.pexels.com/photos/5474300/pexels-photo-5474300.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Hands working with code on a laptop'},{src:'https://images.pexels.com/photos/36598855/pexels-photo-36598855.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Developer reviewing code and technology on a tablet'},{src:'https://images.pexels.com/photos/7988742/pexels-photo-7988742.jpeg?auto=compress&cs=tinysrgb&w=1800',alt:'Technology team collaborating around a computer'}];
-export default function InsightsPage(){return <div className="min-h-screen bg-[#f5f5f2]"><section className="relative overflow-hidden"><HeroVisualCarousel visuals={heroVisuals}/><div className="container relative z-10 pb-14 pt-16 md:pb-24 md:pt-28"><p className="text-xs font-semibold uppercase tracking-[.2em] text-black/40">Insights</p><h1 className="font-display mt-5 max-w-4xl text-5xl font-semibold leading-[.95] tracking-[-.06em] sm:text-6xl md:text-8xl">Ideas behind the products.</h1><p className="mt-6 max-w-2xl text-base leading-7 text-black/60 md:mt-7 md:text-lg md:leading-8">Research, product thinking, technology and perspectives from the work we do and the products we build.</p><div className="mt-6 flex max-w-full gap-2 overflow-x-auto pb-1" aria-label="Insight categories">{categories.map(category=><span key={category} className="shrink-0 border border-black/10 bg-white/70 px-3 py-2 text-[10px] font-semibold uppercase tracking-[.14em] text-black/55">{category}</span>)}</div></div></section><section className="border-t border-black/10"><div className="container grid gap-2 py-2 md:grid-cols-2 md:gap-px md:bg-black/10">{insights.map(i=><Link key={i.slug} href={`/insights/${i.slug}`} className="group border border-black/10 bg-[#f5f5f2] p-6 transition hover:bg-white md:border-0 md:p-10"><div className="flex items-center justify-between gap-4 text-[10px] font-semibold uppercase tracking-[.16em] text-black/40"><span>{i.category}</span><span>{i.readTime}</span></div><h2 className="font-display mt-5 text-2xl font-semibold tracking-[-.045em] group-hover:underline md:mt-8 md:text-4xl">{i.title}</h2><p className="mt-3 text-sm leading-6 text-black/55 md:mt-5 md:text-base md:leading-7">{i.excerpt}</p><span className="mt-5 inline-block text-sm font-semibold">Read insight →</span></Link>)}</div></section></div>}
+import type {Metadata} from "next";
+import {insights} from "@/lib/insights";
+import InsightsExplorer from "@/components/InsightsExplorer";
+export const metadata:Metadata={title:"Insights | ABE TechLab",description:"Original ABE TechLab research, strategy, technology and product articles.",alternates:{canonical:"/insights"}};
+export default function InsightsPage(){return <div className="abe-page">
+ <section className="abe-hero"><div className="abe-wrap">
+  <p className="abe-eyebrow"><span className="abe-dot"/> Studio notes / Research & thinking</p>
+  <h1>Ideas behind <em>the products.</em></h1>
+  <p className="abe-hero-sub">Notes from our research, product thinking, technology and the problems we work to solve. Written from ABE TechLab&apos;s actual content.</p>
+  <div className="abe-hero-rule"><span>Research / Product / Technology / Perspectives</span><span>{insights.length} articles in the archive</span></div>
+ </div></section>
+ <section className="abe-section"><div className="abe-wrap">
+  <div className="abe-section-heading" style={{marginBottom:35}}><div><p className="abe-eyebrow"><span className="abe-dot"/> Field notes</p><h2>Read. Think. <span style={{color:"#82a921"}}>Build.</span></h2></div><p>Practical ideas from product research, teaching technology, market understanding and building digital products.</p></div>
+  <InsightsExplorer insights={insights}/>
+ </div></section></div>}

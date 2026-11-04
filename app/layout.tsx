@@ -3,9 +3,13 @@ import "./globals.css";
 import "./responsive-ui.css";
 import "./hero-stack.css";
 import "./bridge-theme.css";
+import "./studio-ui.css";
+import "./contact-form-ui.css";
+import "./programs-ui.css";
+import "./legal-ui.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import AmbientPiano from "@/components/AmbientPiano";
+
 import { PageTransition } from "@/components/PageTransition";
 import WebsiteAssistant from "@/components/WebsiteAssistant";
 import { absoluteUrl, siteEmail, siteName, siteUrl } from "@/lib/site";
@@ -28,5 +32,5 @@ const structuredData = { "@context": "https://schema.org", "@graph": [
 ] };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><PageTransition /><Header /><main>{children}</main><Footer /><AmbientPiano /><WebsiteAssistant /></body></html>;
+  return <html lang="en"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><PageTransition /><Header /><main>{children}</main><Footer /><script defer src="/abe-piano.js"></script><WebsiteAssistant /></body></html>;
 }

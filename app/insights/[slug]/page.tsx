@@ -1,22 +1,34 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getInsight, getRelatedInsights, insights } from '@/lib/insights';
-import { absoluteUrl } from '@/lib/site';
-
-const pathLabels: Record<string, string> = { '/services':'Services', '/products':'Products', '/programs':'Programs', '/about':'About ABE TechLab', '/contact':'Start a project', '/work':'Selected work' };
-
-export function generateStaticParams(){ return insights.map((i)=>({slug:i.slug})); }
-
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}){
-  const {slug}=await params; const i=getInsight(slug); if(!i)return{};
-  const url=absoluteUrl(`/insights/${i.slug}`);
-  return { title:i.title, description:i.excerpt, alternates:{canonical:url}, openGraph:{title:i.title,description:i.excerpt,type:'article',url,publishedTime:i.publishedAt,authors:[i.author],section:i.category} };
+import type {Metadata} from "next";
+import Link from "next/link";
+import {ArrowUpRight,ArrowLeft} from "lucide-react";
+import {notFound} from "next/navigation";
+import {insights,getInsight,getRelatedInsights} from "@/lib/insights";
+import {absoluteUrl} from "@/lib/site";
+export function generateStaticParams(){return insights.map(item=>({slug:item.slug}));}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
+ const {slug}=await params;const item=getInsight(slug);if(!item)return{};
+ return {title:item.title,description:item.excerpt,alternates:{canonical:"/insights/"+slug},openGraph:{title:item.title,description:item.excerpt,type:"article",publishedTime:item.publishedAt,authors:[item.author]}};
 }
-
-export default async function InsightPage({params}:{params:Promise<{slug:string}>}){
-  const {slug}=await params; const i=getInsight(slug); if(!i)notFound();
-  const url=absoluteUrl(`/insights/${i.slug}`); const relatedInsights=getRelatedInsights(i,3); const relatedPaths=i.relatedPaths ?? [];
-  const articleStructuredData={'@context':'https://schema.org','@type':'Article',headline:i.title,description:i.excerpt,datePublished:i.publishedAt,dateModified:i.updatedAt||i.publishedAt,mainEntityOfPage:{'@type':'WebPage','@id':url},author:{'@type':'Organization',name:i.author,url:absoluteUrl('/')},publisher:{'@type':'Organization',name:'ABE TechLab',url:absoluteUrl('/')},articleSection:i.category};
-  const displayDate=new Intl.DateTimeFormat('en-NG',{day:'numeric',month:'long',year:'numeric'}).format(new Date(`${i.updatedAt||i.publishedAt}T00:00:00Z`));
-  return <article className="min-h-screen bg-[#f5f5f2]"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(articleStructuredData)}}/><header className="container max-w-4xl pb-12 pt-16 md:pb-16 md:pt-28"><Link href="/insights" className="text-xs font-semibold uppercase tracking-[.18em] text-black/40 transition hover:text-black">← All insights</Link><div className="mt-10 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] text-black/40"><span>{i.category}</span><span aria-hidden="true">·</span><span>{i.readTime}</span></div><h1 className="font-display mt-5 max-w-4xl text-5xl font-semibold leading-[.95] tracking-[-.06em] sm:text-6xl md:text-7xl">{i.title}</h1><p className="mt-7 max-w-2xl text-lg leading-8 text-black/60 md:text-xl">{i.excerpt}</p><p className="mt-6 text-xs text-black/40">By {i.author} · {displayDate}{i.updatedAt&&i.updatedAt!==i.publishedAt?' · Updated':''}</p></header><main className="border-t border-black/10"><div className="container max-w-3xl py-12 md:py-20"><div className="space-y-7">{i.content.map((p,n)=><p key={`${i.slug}-${n}`} className="text-[1.05rem] leading-8 text-black/70 md:text-lg md:leading-9">{p}</p>)}</div>{relatedPaths.length>0&&<section className="mt-16 border-t border-black/10 pt-8"><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-black/40">Explore ABE TechLab</p><div className="mt-4 flex flex-wrap gap-2">{relatedPaths.map((path)=><Link key={path} href={path} className="inline-flex min-h-11 items-center border border-black/10 bg-white/70 px-4 py-3 text-sm font-semibold transition hover:bg-white">{pathLabels[path]||path} →</Link>)}</div></section>}{relatedInsights.length>0&&<section className="mt-14 border-t border-black/10 pt-8"><div className="flex items-end justify-between gap-4"><div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-black/40">Keep reading</p><h2 className="font-display mt-2 text-2xl font-semibold tracking-[-.04em] md:text-3xl">More from ABE TechLab</h2></div><Link href="/insights" className="text-xs font-semibold uppercase tracking-[.14em] text-black/45 hover:text-black">All insights →</Link></div><div className="mt-6 grid gap-3">{relatedInsights.map((r)=><Link key={r.slug} href={`/insights/${r.slug}`} className="group border border-black/10 bg-white/45 p-5 transition hover:bg-white"><div className="flex items-center justify-between gap-4 text-[10px] font-semibold uppercase tracking-[.14em] text-black/40"><span>{r.category}</span><span>{r.readTime}</span></div><h3 className="font-display mt-3 text-xl font-semibold tracking-[-.03em] group-hover:underline">{r.title}</h3><p className="mt-2 text-sm leading-6 text-black/55">{r.excerpt}</p></Link>)}</div></section>}{<div className="mt-14 border-t border-black/10 pt-8"><p className="max-w-xl text-sm leading-6 text-black/55">Have a product, research or technology problem worth working through?</p><Link href="/contact" className="btn-primary mt-4 inline-flex min-h-12 px-6 py-4 font-semibold">Talk to ABE TechLab →</Link></div>}</div></main></article>;
+export default async function ArticlePage({params}:{params:Promise<{slug:string}>}){
+ const {slug}=await params;const article=getInsight(slug);if(!article)notFound();
+ const related=getRelatedInsights(article,3);
+ const date=new Intl.DateTimeFormat("en-NG",{day:"numeric",month:"long",year:"numeric"}).format(new Date(article.updatedAt||article.publishedAt));
+ const structured={"@context":"https://schema.org","@type":"Article",headline:article.title,description:article.excerpt,datePublished:article.publishedAt,dateModified:article.updatedAt||article.publishedAt,mainEntityOfPage:absoluteUrl("/insights/"+slug),author:{"@type":"Organization",name:article.author},publisher:{"@type":"Organization",name:"ABE TechLab"}};
+ return <div className="abe-page abe-article-detail">
+  <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured)}}/>
+  <section className="abe-hero"><div className="abe-wrap">
+   <Link href="/insights" className="abe-back"><ArrowLeft size={15}/> All insights</Link>
+   <p className="abe-eyebrow" style={{marginTop:60}}><span className="abe-dot"/> {article.category} / {article.readTime}</p>
+   <h1>{article.title}</h1><p className="abe-hero-sub">{article.excerpt}</p>
+   <div className="abe-hero-rule"><span>By {article.author}</span><span>{date}</span></div>
+  </div></section>
+  <section className="abe-section"><div className="abe-wrap">
+   <div className="abe-prose">{article.content.map((p,i)=><p key={i}>{p}</p>)}</div>
+   {article.relatedPaths?.length? <div className="abe-prose" style={{marginTop:70,paddingTop:25,borderTop:"1px solid #ccc"}}><p className="abe-eyebrow" style={{margin:0}}>Related ABE work</p><div className="abe-chips" style={{marginTop:18}}>{article.relatedPaths.map(path=><Link key={path} className="abe-chip" href={path}>{path==="/work"?"Selected Work":path.replace("/","").replaceAll("-"," ")||"Home"} ↗</Link>)}</div></div>:null}
+  </div></section>
+  <section className="abe-section abe-article-related"><div className="abe-wrap">
+   <div className="abe-section-heading" style={{marginBottom:32}}><h2>Keep <span style={{color:"#82a921"}}>reading.</span></h2><Link className="abe-back" style={{color:"#111"}} href="/insights">All insights <ArrowUpRight size={16}/></Link></div>
+   <div className="abe-grid abe-grid-3">{related.map(item=><Link key={item.slug} href={"/insights/"+item.slug} className="abe-card"><span className="abe-card-label">{item.category}</span><h3>{item.title}</h3><p>{item.excerpt}</p><div className="abe-card-bottom"><span>{item.readTime}</span><ArrowUpRight size={22}/></div></Link>)}</div>
+  </div></section>
+ </div>
 }

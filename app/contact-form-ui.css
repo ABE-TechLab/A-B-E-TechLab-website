@@ -1,0 +1,12 @@
+
+/* Responsive form keeps the original four-step mobile flow, but is fully reskinned. */
+.abe-mobile-form{display:none}
+.abe-desktop-form{display:grid}
+.abe-mobile-form .mobile-contact-form{display:block}
+.abe-mobile-form .mobile-choice{background:#F9F9F6;border:1px solid #c8c8c2;color:#111;font-family:var(--abe-display);border-radius:0;min-height:54px}
+.abe-mobile-form .mobile-choice.is-selected,.abe-mobile-form .mobile-choice:hover{background:#e8f4c8;border-color:#A7E021}
+.abe-mobile-form .mobile-field{background:transparent;border:0;border-bottom:1px solid #b5b5af;border-radius:0;font-family:var(--abe-display)}
+.abe-mobile-form button:focus-visible,.abe-mobile-form input:focus-visible{outline:2px solid #A7E021;outline-offset:2px}
+.abe-mobile-form .mobile-contact-form :is(button[type=submit],.btn-primary){background:#A7E021!important;border-color:#A7E021!important;color:#111!important}
+.abe-mobile-form .mobile-contact-form input[type=radio]{accent-color:#81af12}
+@media(max-width:760px){.abe-contact-grid{gap:45px}.abe-mobile-form{display:block}.abe-desktop-form{display:none}.abe-contact-contact{padding:25px}.abe-contact-info h2{font-size:40px}}
