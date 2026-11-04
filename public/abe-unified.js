@@ -3,7 +3,7 @@
 (function(){
 "use strict";
 if(window.__abeUnified)return;window.__abeUnified=true;document.documentElement.classList.add("abex-js");
-const LINKS=[["Services","/services"],["Work","/work"],["Process","/process"],["Programs","/programs"],["Products","/products"],["Team","/team"],["About","/about"],["Insights","/insights"]];
+const LINKS=[["Services","/services"],["Work","/work"],["Process","/process"],["Programs","/programs"],["Products","/products"],["About","/about"],["Insights","/insights"]];
 const arrow='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 function navMarkup(){return '<ul>'+LINKS.map((x,i)=>'<li><a href="'+x[1]+'"'+(location.pathname===x[1]||location.pathname.startsWith(x[1]+"/")?' aria-current="page"':'')+'><span class="cghd-n">'+String(i+1).padStart(2,"0")+'</span>'+x[0]+'</a></li>').join("")+'</ul>'}
 function updateHeader(){
@@ -15,7 +15,7 @@ function updateHeader(){
  const menu=header.querySelector(".abe-mobile-menu")||document.createElement("nav");
  if(!menu.classList.contains("abe-mobile-menu")){
    menu.className="abe-mobile-menu";menu.id="abe-site-menu";menu.setAttribute("aria-label","ABE TechLab mobile navigation");
-   menu.innerHTML=LINKS.map((x,i)=>'<a href="'+x[1]+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+x[0]+arrow+'</a>').join("")+'<a href="/contact"><span>09</span>Start a project'+arrow+'</a>';
+   menu.innerHTML=LINKS.map((x,i)=>'<a href="'+x[1]+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+x[0]+arrow+'</a>').join("")+'<a href="/contact"><span>08</span>Start a project'+arrow+'</a>';
    header.appendChild(menu);
  }
  const burger=header.querySelector(".cghd-burger");if(burger&&!burger.dataset.abeUnified){
@@ -24,6 +24,13 @@ function updateHeader(){
    document.addEventListener("keydown",e=>{if(e.key==="Escape"){menu.classList.remove("is-open");burger.setAttribute("aria-expanded","false");document.documentElement.style.overflow=""}});
  }
  if(!menu.classList.contains("is-open"))menu.setAttribute("aria-hidden","true");
+}
+function ensureTeamMore(){
+ document.querySelectorAll("section.cgtm").forEach(section=>{
+ if(section.querySelector(".cgtm-view-more"))return;
+ const slot=document.createElement("div");slot.className="cgtm-view-more";
+ const link=document.createElement("a");link.href="/team";link.textContent="View more about the team";slot.appendChild(link);section.appendChild(slot);
+ });
 }
 function footer(){document.querySelectorAll(".cgft-cols").forEach(nav=>{if(nav.dataset.abeUnified)return;
  const anchors=[...nav.querySelectorAll("a")];for(const a of anchors){
@@ -40,7 +47,7 @@ function motion(){
  card.addEventListener("pointermove",e=>{if(e.pointerType==="touch")return;const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.setProperty("--tiltx",(-y*2.7)+"deg");card.style.setProperty("--tilty",(x*3.4)+"deg")});
  card.addEventListener("pointerleave",()=>{card.style.setProperty("--tiltx","0deg");card.style.setProperty("--tilty","0deg")});
  });}
-let updating=false;function update(){if(updating)return;updating=true;requestAnimationFrame(()=>{updating=false;updateHeader();footer();motion()})}
+let updating=false;function update(){if(updating)return;updating=true;requestAnimationFrame(()=>{updating=false;updateHeader();footer();ensureTeamMore();motion()})}
 document.addEventListener("DOMContentLoaded",update);update();
 const mo=new MutationObserver(update);mo.observe(document.documentElement,{subtree:true,childList:true});
 const wipe=document.createElement("div");wipe.id="abex-transition";wipe.setAttribute("aria-hidden","true");document.body.appendChild(wipe);

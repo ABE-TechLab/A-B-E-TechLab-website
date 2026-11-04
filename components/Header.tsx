@@ -4,7 +4,7 @@ import Image from "next/image";
 import {useEffect,useState} from "react";
 import {usePathname} from "next/navigation";
 import {ArrowUpRight,Menu,X} from "lucide-react";
-const links=[["Services","/services"],["Work","/work"],["Process","/process"],["Products","/products"],["Programs","/programs"],["Team","/team"],["Insights","/insights"],["About","/about"]] as const;
+const links=[["Services","/services"],["Work","/work"],["Process","/process"],["Products","/products"],["Programs","/programs"],["Insights","/insights"],["About","/about"]] as const;
 export function Logo(){return <Link href="/" aria-label="ABE TechLab home" className="abe-brand"><Image src="/brand/abe-techlab-mark-dark.svg" alt="" width={42} height={35} unoptimized/><span>ABE TechLab</span></Link>}
 export function Header(){
  const [open,setOpen]=useState(false);
