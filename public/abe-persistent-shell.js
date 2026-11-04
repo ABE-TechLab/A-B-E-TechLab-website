@@ -26,15 +26,28 @@ function start(){
  wrap.appendChild(frame);
  const sound=document.querySelector("[data-abe-piano]");
  if(sound)sound.style.zIndex="2147481000";
+ const overflowBefore=document.body.style.overflow;
+ const hiddenBefore=[];
+ let frameReady=false;
+ function restore(){
+  wrap.remove();
+  document.documentElement.classList.remove("abe-persistent-active");
+  document.body.style.overflow=overflowBefore;
+  for(const [el,val] of hiddenBefore)if(val===null)el.removeAttribute("aria-hidden");else el.setAttribute("aria-hidden",val);
+ }
+ // Never strand visitors behind an empty iframe if embedding is blocked.
+ const frameTimeout=setTimeout(()=>{if(!frameReady)restore()},10000);
  let backNavigation=false;
  let lastFrameURL=location.pathname+location.search+location.hash;
  frame.addEventListener("load",()=>{
    let url;try{url=frame.contentWindow.location}catch{
-     // If an authentication or external redirect prevents same-origin access,
-     // keep the unframed site readable rather than displaying a blank overlay.
-     wrap.remove();document.documentElement.classList.remove("abe-persistent-active");return;
+     // Authentication and external destinations must never trap the visitor.
+     clearTimeout(frameTimeout);restore();return;
    }
-   if(url.origin!==location.origin)return;
+   if(url.origin!==location.origin){clearTimeout(frameTimeout);restore();return}
+   if(!frame.contentDocument?.querySelector("body"))return;
+   frameReady=true;clearTimeout(frameTimeout);
+   document.title=frame.contentDocument.title||document.title;
    const relative=url.pathname+url.search+url.hash;
    lastFrameURL=relative;
    if(backNavigation){backNavigation=false;return}
@@ -51,6 +64,7 @@ function start(){
  document.body.style.overflow="hidden";
  for(const child of Array.from(document.body.children)){
    if(child===wrap||child===sound||child.tagName==="SCRIPT")continue;
+   hiddenBefore.push([child,child.getAttribute("aria-hidden")]);
    child.setAttribute("aria-hidden","true");
  }
  document.body.appendChild(wrap);
