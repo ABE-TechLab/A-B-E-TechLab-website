@@ -78,3 +78,10 @@ This repository acts as the public-facing technology-lab workspace and documenta
 ## 🔐 Ownership
 
 ABE TechLab materials and software are proprietary unless a repository explicitly states another license. See [`LICENSE`](./LICENSE) for the terms applying to this repository.
+
+
+## Current website architecture
+
+The public site is authored from the Framer source snapshots in `public/template/`. The build transforms the content and brands them with `scripts/abe-migrate-content.mjs`, generates missing pages with `scripts/abe-generate-pages.mjs`, and reuses actual Framer hero/blog structures through `scripts/abe-template-mirror.mjs`. The `next.config.mjs` rewrites public routes to this HTML. Next.js App Router is retained only for API endpoints, metadata, and a safe fallback. Do not restore the removed Next.js marketing layouts.
+
+The earlier iframe-based audio shell was removed because it could cover the whole page on authenticated previews. Page loading and regular navigation do not depend on framing. The audio control retains the on/off preference but seamless sound across full-document navigation is not guaranteed until a tested single-document router is introduced.
