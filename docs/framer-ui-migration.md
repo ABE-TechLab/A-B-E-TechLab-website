@@ -1,68 +1,48 @@
-# ABE TechLab — Framer UI migration (preview)
+# ABE TechLab — UI and page mapping
 
-## Purpose
-Reuse the **published visual UI and animations** captured in `ABE-TechLab/ideal-bassoon` inside the existing Next.js website, **without deleting ABE TechLab’s functionality, APIs, source pages or Vercel environment variables**.
+## Implemented
+The existing Next.js application remains the host. The Framer snapshot provides the visual and animation runtime for selected marketing pages. The migration script updates its published HTML and JS copy at build time, while ABE's APIs and other Next pages stay in place.
 
-### Implemented preview routes
-- `/` → `/template/index.html`
-- `/about` → `/template/about/index.html`
-- `/blog` → `/template/blog/index.html`
-- `/blog/ai-features-that-ship` → `/template/blog/ai-features-that-ship/index.html`
-- `/blog/how-much-does-an-mvp-cost` → `/template/blog/how-much-does-an-mvp-cost/index.html`
-- `/blog/two-week-sprints` → `/template/blog/two-week-sprints/index.html`
-- `/pricing` → `/template/pricing/index.html`
-- `/process` → `/template/process/index.html`
-- `/services` → `/template/services/index.html`
-- `/services/ai-features` → `/template/services/ai-features/index.html`
-- `/services/cloud-devops` → `/template/services/cloud-devops/index.html`
-- `/services/dedicated-teams` → `/template/services/dedicated-teams/index.html`
-- `/services/mobile-apps` → `/template/services/mobile-apps/index.html`
-- `/services/product-design` → `/template/services/product-design/index.html`
-- `/services/web-apps` → `/template/services/web-apps/index.html`
-- `/work` → `/template/work/index.html`
-- `/work/carehub` → `/template/work/carehub/index.html`
-- `/work/ledgerly` → `/template/work/ledgerly/index.html`
-- `/work/pulse` → `/template/work/pulse/index.html`
-- `/work/stockroom` → `/template/work/stockroom/index.html`
-- `/work/wayfare` → `/template/work/wayfare/index.html`
+| Old ABE content | New route | Mapping |
+| --- | --- | --- |
+| Home and studio mission | / | Captured Framer homepage with ABE content |
+| Five services | /services and /services/* | Strategy, research/marketing, product design, product development, delivery, plus digital platform work |
+| Selected work | /work | Five verified projects from data/content.ts |
+| Waste2Light | /work/waste2light | Cloned case layout with product-development description |
+| BuMarS | /work/bumars | Cloned case layout with construction product description |
+| Future Speakers International School | /work/future-speakers | Cloned case layout with school-technology description |
+| Maka Integrated | /work/maka-integrated | Real ABE project-detail page from data/content.ts |
+| Cyfamod Technologies | /work/cyfamod | Real ABE project-detail page from data/content.ts |
+| ABE story, founder, ARIA | /about, /team | Mapped studio/team copy; team is still original Next page |
+| Ten original articles | /insights and /insights/[slug] | Original authoritative article content; sample blog routes redirect |
+| TechTrack, Portfolio Platform, MeetMind / Vertica | /products | Original products page |
+| TechTrack programmes | /programs | Original programmes page, including Kids showcase |
+| Unique ABE contact form | /contact | Existing form, lead submission and assistant follow-up preserved |
+| Contact API and assistant APIs | /api/contact and /api/assistant/* | Untouched original Next server routes |
+| Legal pages | /privacy, /terms, /cookies | Original ABE pages, not template legal copy |
+| Template pricing | /pricing | Redirect to /products, no invented prices exposed as official |
 
-### Intentionally preserved Next.js routes
-- `/contact` — ABE’s existing custom enquiry form, client-side follow-up flow and server-side operations / confirmation email workflow.
-- `/api/contact`, `/api/assistant/chat`, `/api/assistant/channel-links` — **unchanged**. Do not replace with the template form.
-- `/privacy`, `/terms`, `/cookies` — retain current ABE legal pages rather than template legal copy.
-- `/products`, `/programs`, `/team`, `/insights` and `/insights/[slug]` — preserve the existing ABE content until dedicated template-style pages are authored.
+## Build and navigation
+- Build: node scripts/abe-migrate-content.mjs && next build.
+- Development: node scripts/abe-migrate-content.mjs && next dev.
+- The migration touches only public/template HTML and public/assets/runtime MJS files during build; original Next pages remain editable.
+- The client bridge public/abe-frontend-bridge.js forces Next-backed routes to load in Next rather than the captured Framer router.
+- Existing Vercel project and environment variables remain unchanged.
 
-### Content mapping still needed before any production promotion
+## Sources of truth
+- data/content.ts (services and collaborations)
+- data/team.ts (Ayo Richard ABE and ARIA, explicitly marked as AI)
+- app/products/page.tsx, app/programs/page.tsx (products and programmes)
+- lib/insights (articles)
+- app/contact/page.tsx and app/api (actual intake and follow-up workflows)
 
-| Cloned visual section | ABE TechLab content to connect |
-| --- | --- |
-| Home / hero / calls to action | Existing homepage mission, audiences, and focus areas from `data/content.ts` |
-| Services | Product Strategy; Research & Product Marketing; Product Design; Product Development; Product Delivery |
-| Work / case studies | Verified work: Waste2Light, BuMarS, Future Speakers International School, Maka Integrated, Cyfamod Technologies |
-| Process | ABE's actual research, product management, design and delivery approach |
-| Blog | Existing `/insights` articles |
-| About / people | ABE TechLab story and `data/team.ts` |
-| Products and programmes | Existing `/products` and `/programs` routes |
-| Contact | Rebuild the distinctive ABE form visually while keeping its API and assisted follow-up flow |
-| Pricing / template metrics | **Unverified placeholder content**; remove/rewrite before publishing |
+## Review before merging
+- Published Framer HTML/runtime is not the editable Framer source; replace it with authored maintainable components when convenient.
+- Images and fonts may still be loaded from reference CDNs. Sample decorative images are not claimed to depict real ABE projects.
+- Audit all case imagery, historical milestones, testimonials, pricing details, business claims, mobile layouts, and external social links. The copy bridge neutralises many but does not certify every element as factually accurate.
+- The unique contact form is preserved and visually recoloured, but a fully faithful Framer contact redesign still requires a focused UI implementation.
+- Preview contact GET should return 405 (POST-only); never send fake customer leads during testing.
+- Keep changes in this PR until responsive and functional preview review passes.
 
-### Migration mechanics
-- `public/template/`: 24 static Framer HTML page captures.
-- `public/assets/runtime/`: 53 published animation and interaction JS modules.
-- `next.config.mjs`: route rewrites to captured HTML; retained Next app code is not deleted.
-- Images and fonts are still referenced from original public CDNs.
-- Static snapshots are **not the editable Framer source code** and may be harder to maintain than authored Next components.
-- Brand name and customer-facing email were switched to ABE TechLab as an initial preview pass. **That does not constitute a full migration of business copy, claims, case studies, pricing or assets.**
-- The original template’s enquiry form is not connected. The live form stays on ABE's Next `/contact` route.
-- ABE uses existing Vercel project `a-b-e-tech-lab`; environment variables stay at the Vercel project level. No values are copied into Git.
-
-### Before merge to main / release
-1. Preview all 21 routed template pages on desktop and mobile; verify animations, nav and direct-link refreshes.
-2. Review every template claim, price, metric, photograph, logo, external link, case study and legal statement; replace unverified material with ABE content.
-3. Retheme `/contact` using the template style and test `/api/contact` and assistant follow-up end-to-end.
-4. Finish `/products`, `/programs`, `/team` and `/insights` visual mapping.
-5. Verify preview Git-triggered deployment after repository transfer from the old organization; test production only after content sign-off.
-6. Test direct loads, SEO metadata, accessibility, mobile nav, and CDNs.
-
-### Rollback
-Remove `next.config.mjs` rewrites (or revert the migration commit). Original Next pages and APIs remain in Git.
+## Rollback
+Revert the migration commits or remove next.config.mjs rewrites. Original Next page components and APIs remain in the repository.
