@@ -45,7 +45,7 @@ function page(title,description,main){
  let head=sourceHead.replace("<title>ABE TechLab</title>","<title>"+escape(title)+" | ABE TechLab</title>")
  .replace("</head>",'<meta name="description" content="'+escape(description)+'"><link rel="stylesheet" href="/abe-unified.css"></head>');
  const html='<!doctype html><html lang="en">'+head+'<body><a class="abex-skip" href="#main">Skip to content</a>'+header+'<main id="main" class="abex">'+main+'</main>'+footWrap+
- '<script defer src="/abe-unified.js"></script><script defer src="/abe-piano.js"></script><script defer src="/abe-assistant-static.js"></script></body></html>';
+ '<script defer src="/abe-unified.js"></script><script defer src="/abe-piano.js"></script><script defer src="/abe-assistant-static.js"></script><script defer src="/abe-persistent-shell.js"></script></body></html>';
  return html;
 }
 const hero=(label,title,description,tail="Product research · Strategy · Design · Development")=>

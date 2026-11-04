@@ -75,7 +75,7 @@ async function update(route,markup){
  const file=join("public/abe-rendered",route,"index.html");
  const html=await readFile(file,"utf8");
  let result=injectMain(html,markup);
- if(!result.includes("/abe-template-mirror.js"))result=result.replace("</body>",'<script defer src="/abe-template-mirror.js"></script><script defer src="/abe-persistent-shell.js"></script></body>');
+ if(!result.includes("/abe-template-mirror.js"))result=result.replace("</body>",'<script defer src="/abe-template-mirror.js"></script></body>');
  await writeFile(file,result);
 }
 const products=await variable("app/products/page.tsx","products");
@@ -89,6 +89,16 @@ await update("insights",heroData("Insights","Notes from","our <em class='cgph-ac
 await update("products",heroData("Products","Products with","<em class='cgph-acc'>purpose.</em>","Practical products developed by ABE TechLab in learning, professional identity and recruitment.",{index:5,items:[["products",String(products.length)],["focus","Users first"],["work","Research-led"]]})+blogList(products.map(p=>({title:p.name,excerpt:p.description,category:p.category,status:p.status,href:p.href,action:p.cta,image:p.name==="TechTrack"?"/images/techtrack.svg":p.name==="Portfolio Platform"?"/images/portfolio-platform.svg":"/brand/abe-techlab-mark-dark.svg"})),["All","Education technology","Professional identity technology","Recruitment technology"]));
 await update("programs",heroData("Programs","Learn by","<em class='cgph-acc'>doing.</em>","TechTrack learning, bootcamps, internships, kids and future practical technology programmes.",{index:4,items:[["programmes",String(programs.length)],["powered by","TechTrack"],["focus","Hands-on"]]})+blogList(programs.map(p=>({title:p.name,excerpt:p.description,category:p.type,filter:p.type,href:p.id?"/programs#"+p.id:"/contact",action:p.id?"Explore Kids":"Ask about the programme",image:"/images/techtrack.svg"})),["All",...programs.map(p=>p.type)])+
  '<section class="abe-mirror-kids" id="techtrack-kids"><div class="cgbl-w"><p class="abex-kicker">TechTrack Kids</p><h2>Young minds. <em>Real projects.</em></h2><p>Explore practical coding, AI literacy and creativity through hands-on challenges.</p><a href="/contact" class="abex-button">Ask about TechTrack Kids ↗</a></div></section>');
+// Contact preserves the original four-step form but uses the real Framer hero.
+{
+ const path="public/abe-rendered/contact/index.html";
+ const raw=await readFile(path,"utf8");
+ const main=raw.match(/<main id="main" class="abex">([\s\S]*?)<\/main>/)?.[1]||"";
+ const content=main.replace(/^<section class="abex-hero">[\s\S]*?<\/section>/,"");
+ if(!content.includes('data-abe-contact'))throw Error("Contact form must be preserved");
+ await update("contact",heroData("Contact","Let's build","<em class='cgph-acc'>something useful.</em>","Tell us about the problem, product or opportunity. Our contact workflow stays exactly as before.",{index:8,items:[["Start","A conversation"],["Topics","Product & tech"],["Based in","Nigeria"]]})+
+  '<div class="abex">'+content+'</div>');
+}
 // Keep Team as a direct route from About, but remove from the primary navigation.
 await update("team",heroData("Team","People behind","<em class='cgph-acc'>the work.</em>","Human leadership and AI-assisted research supporting the studio.",{index:6,items:[["Human","Leadership"],["AI","Research partner"],["work","Collaborative"]]})+blogList(team.map((m,i)=>({title:m.name,excerpt:m.bio,category:m.type,filter:m.type,status:m.role,href:"/contact",action:"Connect with us",image:m.photo?.src||"/brand/abe-techlab-mark-dark.svg"})),["All","Human","AI"]));
 for(const p of projects.filter(x=>["Maka Integrated","Cyfamod Technologies"].includes(x.name))){
@@ -115,4 +125,12 @@ function postContent(a,j){
  }).join("");
 }
 for(const a of articles)await update("insights/"+a.slug,postContent(a));
+// Bake the View More CTA into every responsive Framer About team section.
+// The shared script also restores it after Framer hydration if necessary.
+{
+ const file="public/template/about/index.html";let html=await readFile(file,"utf8");
+ const label='<div class="cgtm-view-more"><a href="/team" aria-label="View more about the team">View More about the Team ↗</a></div>';
+ html=html.replace(/<section class="cg cgtm(?: is-ph| is-tab)?"[\s\S]*?<\/section>/g,section=>section.includes("cgtm-view-more")?section:section.replace("</section>",label+"</section>"));
+ await writeFile(file,html);
+}
 console.log("ABE native component mirror: Blog/Insights, all articles, Products, Programs, Team and extra work pages updated.");
