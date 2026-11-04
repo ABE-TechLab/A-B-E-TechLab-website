@@ -194,3 +194,7 @@ html.abe-mirror-ready .abe-template .cgpo .cg-hd-i.abe-shown{opacity:1!important
 /* No invisible content when the component animation script is unavailable. */
 html:not(.abe-mirror-ready) .abe-template [style*="opacity:0"]{opacity:1!important;translate:none!important}
 html:not(.abe-mirror-ready) .abe-template [data-mirror-reveal]{opacity:1!important;translate:none!important}
+
+/* Outside the Framer hydration tree: avoids header reconciliation conflicts. */
+.abe-mobile-menu{position:fixed!important;bottom:auto;max-height:calc(100dvh - 60px);overflow-y:auto;z-index:2147482000}
+.cgwl-card[hidden]{display:none!important}

@@ -103,7 +103,7 @@ await update("programs",heroData("Programs","Learn by","<em class='cgph-acc'>doi
 await update("team",heroData("Team","People behind","<em class='cgph-acc'>the work.</em>","Human leadership and AI-assisted research supporting the studio.",{index:6,items:[["Human","Leadership"],["AI","Research partner"],["work","Collaborative"]]})+blogList(team.map((m,i)=>({title:m.name,excerpt:m.bio,category:m.type,filter:m.type,status:m.role,href:"/contact",action:"Connect with us",image:m.photo?.src||"/brand/abe-techlab-mark-dark.svg"})),["All","Human","AI"]));
 for(const p of projects.filter(x=>["Maka Integrated","Cyfamod Technologies"].includes(x.name))){
  const slug=p.name==="Maka Integrated"?"maka-integrated":"cyfamod";
- const sibling=projects.filter(x=>x.name!==p.name).slice(0,4).map(x=>({title:x.name,excerpt:x.description,category:x.category,href:"/work",action:"View selected work"}));
+ const sibling=projects.filter(x=>x.name!==p.name).slice(0,4).map(x=>({title:x.name,excerpt:x.description,category:x.category,href:({ "Waste2Light":"/work/waste2light", "BuMarS":"/work/bumars", "Future Speakers International School":"/work/future-speakers", "Maka Integrated":"/work/maka-integrated", "Cyfamod Technologies":"/work/cyfamod" }[x.name]||"/work"),action:"Read case study"}));
  await update("work/"+slug,heroData("Selected Work",p.name==="Maka Integrated"?"Maka Integrated":"Cyfamod","<em class='cgph-acc'>Technologies.</em>",p.description,{index:2,items:[["work","Product"],["focus","Strategy"],["project","Collaboration"]]})+blogList(sibling,["All"]));
 }
 const POST_START=postRefs.map(p=>p.slice(0,p.indexOf("</style>")+8));
