@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/abe-migrate-content.mjs && next dev",
-    "build": "node scripts/abe-migrate-content.mjs && next build",
+    "dev": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && next dev",
+    "build": "node scripts/abe-migrate-content.mjs && node scripts/abe-generate-pages.mjs && next build",
     "start": "next start",
     "lint": "next lint"
   },

@@ -3,7 +3,7 @@
  * routes are rewritten to the published visual template. Legacy template links
  * are redirected to actual ABE routes. The special contact experience stays in Next.
  */
-const visuals = [
+const visuals = [["/contact","/abe-rendered/contact/index.html"],["/products","/abe-rendered/products/index.html"],["/programs","/abe-rendered/programs/index.html"],["/team","/abe-rendered/team/index.html"],["/insights","/abe-rendered/insights/index.html"],["/insights/:slug","/abe-rendered/insights/:slug/index.html"],["/work/maka-integrated","/abe-rendered/work/maka-integrated/index.html"],["/work/cyfamod","/abe-rendered/work/cyfamod/index.html"],["/privacy","/abe-rendered/privacy/index.html"],["/terms","/abe-rendered/terms/index.html"],["/cookies","/abe-rendered/cookies/index.html"]].concat([
  ["/","/template/index.html"],
  ["/about","/template/about/index.html"],
  ["/services","/template/services/index.html"],
@@ -18,7 +18,7 @@ const visuals = [
  ["/work/bumars","/template/work/pulse/index.html"],
  ["/work/future-speakers","/template/work/ledgerly/index.html"],
  ["/process","/template/process/index.html"],
-];
+]);
 const legacyRedirects = [
  ["/pricing","/products"],
  ["/blog","/insights"],
