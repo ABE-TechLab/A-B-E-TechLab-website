@@ -199,7 +199,95 @@ const links = [
   ["/pricing","/products"],
   ["/blog","/insights"],
 ];
-const replacementPairs=[...common,...links].sort((a,b)=>b[0].length-a[0].length);
+const editorialCorrections = [
+ ["Tech Developers for AI Startups, Software & Apps","Product Research, Strategy, Design & Technology"],
+ ["Tech Developers for AI Startups, Software &amp; Apps","Product Research, Strategy, Design &amp; Technology"],
+ ["A Software Development Studio in Austin","Product, Research & Technology Studio in Nigeria"],
+ ["Software Development Services — Product Development, Digital Platforms & AI","Product Services — Strategy, Research, Design & Development"],
+ ["Software Development Service","Product & Technology Service"],
+ ["Our Work — Case Studies from Startups & Growing Companies","Selected Work — Research, Product & Technology"],
+ ["Products we shipped.","Selected work and collaborations."],
+ ["Real launches with real numbers. Every case below was designed, built and shipped by the same team you would work with.","Selected collaborations in education, construction, healthcare and digital technology. Each project is described using ABE TechLab's existing portfolio information."],
+ ["Product development, mobile apps and Research & marketing for startups and growing companies. Every one live, every one measured.","Selected work across research, product strategy, marketing, design, development and delivery."],
+ ["Every project runs on the same board you can see: one ticket for your product, moving a column every sprint.","We use clear product requirements, priorities, responsibilities and regular progress reviews to keep work moving."],
+ ["Commits to client repositories over the last 12 months. Every orange square is working software going out.","Illustrative activity visual. Real projects are managed around agreed requirements and delivery milestones."],
+ ["Senior engineers and designers who have built products for startups and scale-ups. The people on your kickoff call are the people writing your code.","Our studio combines human product leadership with AI-assisted research and collaboration with specialists as projects require."],
+ ["Senior engineers and designers who have built products for startups and scale-ups.","Human product leadership, research, design and technology collaboration."],
+ ["Client reviews","Studio principles"],
+ ["Every project ends with a review. These are the ones our clients left.","The principles that guide our research, product decisions and collaboration."],
+ ["status: live in production","status: selected project"],
+ ["Shipped to production","Research to delivery"],
+ ["Build your team","Build with clarity"],
+ ["Fixed price for a first release, a monthly squad for a roadmap, or a retainer to keep a live product fast. Every plan ships working software every two weeks.","Project scope and milestones depend on your product needs. Start a conversation and we can agree on practical next steps."],
+ ["We build the product your customers log into every day: dashboards, marketplaces, booking flows and admin tools, with tests, monitoring and a clean handover.","We build digital products, platforms, dashboards and internal systems around real user and operational needs."],
+ ["Apps people keep on their home screen: offline mode, push notifications, in-app payments and a release process that never blocks your team.","We plan and develop practical mobile experiences around user journeys, product quality and delivery needs."],
+ ["We add AI where it earns its keep: assistants trained on your data, document extraction, recommendations and workflows that run on their own, with evaluation so quality stays high.","We research user and market needs, clarify product positioning and create messaging and launch strategies grounded in evidence."],
+ ["Designers who sit in the same sprint as the engineers: research, flows, high-fidelity screens and a design system your team can grow.","We design user flows, wireframes, interfaces and design systems that connect real problems with usable experiences."],
+ ["For companies that need more hands than hiring allows: a stable team that owns a product area, joins your rituals and ships every sprint.","We help turn ideas and problems into a clear product direction, roadmap and realistic MVP scope."],
+ ["A senior squad that owns your roadmap","Product management and delivery support"],
+ ["Product lead, design on demand","Product strategy and design"],
+ ["2 senior engineers","Agreed delivery support"],
+ ["Senior engineers","Product specialists"],
+ ["Cancel with 30 days notice","Terms agreed per project"],
+ ["Two-week sprints with demos","Regular milestones and reviews"],
+ ["Product Team","Product Support"],
+ ["Book a team","Discuss your project"],
+ ["Start the retainer","Start a conversation"],
+ ["fixed price","scope-led pricing"],
+ ["Fixed price","Scope-led pricing"],
+ ["per month","by agreement"],
+ ["Custom / month","Custom terms"],
+ ["Scope and fixed quote","Scope and proposal"],
+ ["Launch to the stores and the web, with monitoring on and our team on call.","Prepare for launch, agree on quality checks and plan support that fits the product."],
+ ["Two-week sprints with a demo of working software at the end of each one.","Work is organised into agreed milestones with regular reviews and demonstrations."],
+ ["Senior people only","Clarity in every role"],
+ ["Every project is run by engineers with at least eight years of shipping. No juniors learning on your budget.","We begin by understanding user needs, requirements and the purpose of the product."],
+ ["Working software every two weeks","Visible progress and learning"],
+ ["You click through something real at every demo. Progress is a build, never a slide.","Progress is reviewed against the agreed scope, design decisions and deliverables."],
+ ["Scope moves, dates do not","Realistic planning"],
+ ["When something takes longer, we cut scope with you and keep the release on time.","We review trade-offs and milestones when new requirements or constraints emerge."],
+ ["You own everything","Clear handover terms"],
+ ["Code, cloud, accounts and designs live in your name from the first commit.","Ownership, access, documentation and handover are agreed for each engagement."],
+ ["The studio so far","Our approach"],
+ ["Ten years of *shipping*","Research, strategy and delivery"],
+ ["Ten years of shipping","Research, strategy and delivery"],
+ ["ABE TechLab started in Austin in 2016 with four engineers who were tired of watching good ideas die in slow agencies. We wanted a studio where the people who scope the work are the people who write the code.","ABE TechLab researches, shapes, designs, builds and positions digital products. We connect research and product thinking with technology that serves real users."],
+ ["Today we are 38 engineers, designers and product leads. We have shipped more than 140 products for startups and growing companies, from first MVPs to platforms that serve millions of users, and we still demo working software every two weeks.","The studio combines human leadership and AI-assisted research with product strategy, design, development and technology education. We work on our own products and collaborate with organisations on real challenges."],
+ ["2016|founded in Austin;38|engineers and designers;140+|products shipped;9|countries our clients ship in","01|research-led approach;05|core services;05|selected projects;03|studio products"],
+ ["2016|Four engineers, one room|ABE TechLab opens in Austin with its first startup client.;2018|First million users|A fintech app we built passes one million sign-ups.;2019|Mobile practice|React Native and native iOS and Android join the web team.;2021|Remote across 6 time zones|The team grows to 20 and starts working with clients in Europe.;2023|AI features in production|Our first retrieval and assistant features go live for clients.;2024|100th product shipped|A milestone release, and a bigger studio on South Congress.;2026|38 people, 140+ products|Still demoing working software every two weeks.","01|Understand the problem|Research users, markets, problems and opportunities.;02|Shape the strategy|Clarify product direction, requirements and scope.;03|Design the experience|Create user journeys, prototypes and interfaces.;04|Plan delivery|Agree on priorities, ownership and milestones.;05|Build with care|Develop useful digital products and systems.;06|Test and improve|Review the experience and address issues.;07|Learn and iterate|Use feedback to guide future product decisions."],
+ ["Four rules we|*do not* bend","Principles that guide|*our work*"],
+ ["We build software|startups can *bet on.*","We turn ideas|into *useful products.*"],
+ ["The studio","The studio"],
+ ["AUSTIN","NIGERIA"],
+ ["Austin","Nigeria"],
+ ["12 weeks","Project-specific"],
+ ["+38%","01"],
+ ["bookings in 90 days","project example"],
+ ["120k","02"],
+ ["downloads in year one","project example"],
+ ["9 h","03"],
+ ["saved per accountant weekly","project example"],
+ ["−44%","04"],
+ ["missed appointments","project example"],
+ ["5x","05"],
+ ["peak traffic, zero downtime","project example"],
+ ["1.1 s page load","Product delivery"],
+ ["−52% checkout drop-off","Experience design"],
+ ["98.7% extraction accuracy","Research insight"],
+ ["3x faster close","Clearer workflows"],
+ ["41% weekly active","User needs"],
+ ["30 clinics live","Digital health"],
+ ["4.9★ patient rating","Product support"],
+ ["0 minutes down","Quality focus"],
+ ["+22% online revenue","Product strategy"],
+ ["4.8★ store rating","Usability focus"],
+ ["Our first retrieval and assistant features go live for clients.","AI-assisted workflows can support research and product development when appropriate."],
+ ["A HIPAA-ready patient app","A healthcare product strategy"],
+ ["The team grows to 20 and starts working with clients in Europe.","Collaborations develop according to each product and project."],
+ ["ABE TechLab opens in Nigeria with its first startup client.","ABE TechLab starts from user needs and practical product problems."],
+ ["A milestone release, and a bigger studio on South Congress.","Products and delivery approaches evolve as requirements change."]
+];
+const replacementPairs=[...common,...editorialCorrections,...links].sort((a,b)=>b[0].length-a[0].length);
 function transform(input){
   let out=input;
   for (const [from,to] of replacementPairs) if (out.includes(from)) out=out.split(from).join(to);
@@ -221,6 +309,13 @@ for(const root of roots){
   for(const file of await walk(root)){
     const previous=await readFile(file,"utf8");
     let next=transform(previous);
+    if(file.endsWith("/template/about/index.html")){
+      const steps={"2016":"01","2018":"02","2019":"03","2021":"04","2023":"05","2024":"06","2026":"07"};
+      next=next.replace(/>(2016|2018|2019|2021|2023|2024|2026)</g,(m,y)=>">"+steps[y]+"<");
+    }
+    if(file.endsWith(".html")&&!next.includes("abe-unverified-proof")){
+      next=next.replace("</head>",'<style id="abe-unverified-proof">[data-framer-name="CgReviews"]{display:none!important}</style></head>');
+    }
     if(file.endsWith(".html")&&!next.includes("/abe-frontend-bridge.js")){
       next=next.replace("</body>",'<script defer src="/abe-frontend-bridge.js"></script></body>');
     }
