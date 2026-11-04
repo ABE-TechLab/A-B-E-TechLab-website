@@ -27,7 +27,10 @@ async function readVariable(file,name){
 async function discover(folder){let out=[];for(const ent of await readdir(folder,{withFileTypes:true})){let path=join(folder,ent.name);if(ent.isDirectory())out.push(...await discover(path));else if(ent.isFile()&&path.endsWith("index.html"))out.push(path)}return out}
 
 const cloned=await readFile("public/template/contact/index.html","utf8");
-const header=cloned.match(/<header class="cg cghd[\s\S]*?<\/header>/)?.[0];
+const destinations=[["Services","/services"],["Work","/work"],["Process","/process"],["Programs","/programs"],["Products","/products"],["Team","/team"],["About","/about"],["Insights","/insights"]];
+const primaryNav='<nav class="cghd-nav" aria-label="ABE TechLab primary navigation"><ul style="font-family:var(--cg-font-m,JetBrains Mono),monospace">'+destinations.map(([name,url],i)=>'<li><a href="'+url+'"><span class="cghd-n">'+String(i+1).padStart(2,"0")+'</span>'+name+'</a></li>').join("")+'</ul></nav>';
+const useUnifiedNav=markup=>markup.replace(/<nav class="cghd-nav"[\s\S]*?<\/nav>/,primaryNav);
+const header=useUnifiedNav(cloned.match(/<header class="cg cghd[\s\S]*?<\/header>/)?.[0]||"");
 const footers=[...cloned.matchAll(/<footer class="cg cg-dark cgft[\s\S]*?<\/footer>/g)].map(x=>x[0]);
 if(!header||footers.length!==3)throw Error("Framer shell missing: abort instead of shipping a separate layout");
 let sourceHead=cloned.slice(cloned.indexOf("<head>"),cloned.indexOf("</head>")+7)
@@ -142,6 +145,7 @@ for(const [route,title] of [["privacy","Privacy Policy"],["terms","Terms of Use"
 // The one global script aligns every captured page's header and links.
 for(const file of await discover("public/template")){
  let html=await readFile(file,"utf8");
+ html=useUnifiedNav(html);
  if(!html.includes("/abe-unified.css"))html=html.replace("</head>",'<link rel="stylesheet" href="/abe-unified.css"></head>');
  html=html.replaceAll('<script defer src="/abe-frontend-bridge.js"></script>',"");
  if(!html.includes("/abe-unified.js"))html=html.replace("</body>",'<script defer src="/abe-unified.js"></script></body>');
