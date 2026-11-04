@@ -91,6 +91,31 @@ window.addEventListener("load",reconcile,{once:true});
 setTimeout(reconcile,650);
 setTimeout(reconcile,1850);
 setTimeout(reconcile,3600);
+/* Framer may replace the original SSR header shortly after first paint.
+   Observe ONLY during hydration, and ONLY repair navigation or labels when
+   they drift. Never restart scroll observers on DOM changes. */
+function watchHydration(){
+ const root=document.querySelector("#main[data-framer-hydrate-v2]");
+ if(!root||!("MutationObserver" in window))return;
+ let scheduled=false;
+ const obs=new MutationObserver(()=>{
+  const nav=document.querySelector("nav.cghd-nav");
+  const links=[...(nav?.querySelectorAll("li>a[href]")||[])];
+  const staleNav=links.length!==LINKS.length||links.some((a,i)=>a.getAttribute("href")!==LINKS[i]?.[1]);
+  const staleTeam=location.pathname==="/about"&&!document.querySelector(".cgtm-view-more");
+  const staleWork=location.pathname==="/work"&&[...document.querySelectorAll(".cgwl-chips button")].some(b=>/Travel|Fintech|Retail|Health & fitness/.test(b.textContent));
+  if(!staleNav&&!staleTeam&&!staleWork||scheduled)return;
+  scheduled=true;
+  requestAnimationFrame(()=>{
+   scheduled=false;
+   try{if(staleNav)updateHeader();if(staleTeam)ensureTeamMore();if(staleWork)setupWorkFilters()}catch(e){console.warn("ABE hydration reconciliation skipped",e)}
+  });
+ });
+ obs.observe(root,{childList:true,subtree:true});
+ setTimeout(()=>obs.disconnect(),8000);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",watchHydration,{once:true});else watchHydration();
+
 document.addEventListener("click",e=>{
  const burger=e.target.closest?.(".cghd-burger");
  if(!burger)return;
