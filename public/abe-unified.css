@@ -89,7 +89,7 @@ body{background:var(--abex-night)}
 .abex .abex-button:disabled{opacity:.5;cursor:wait}
 .abex .abex-notice{padding:18px 20px;margin-top:18px;border:1px solid #A7E021;background:#26351a;font:14px/1.7 "Instrument Sans",Arial,sans-serif}
 .abex .abex-notice.error{border-color:#cf6969;background:#3e2424}
-html.abex-js .abex [data-abe-reveal]{opacity:0;translate:0 38px;transition:opacity .75s ease,translate .95s cubic-bezier(.2,.8,.2,1)}
+html.abex-motion-ready .abex [data-abe-reveal]:not(.visible){opacity:0;translate:0 38px;transition:opacity .75s ease,translate .95s cubic-bezier(.2,.8,.2,1)}
 .abex [data-abe-reveal].visible{opacity:1;translate:0 0}
 .abex .abex-step{display:none}.abex .abex-step.active{display:block}
 .abex .abex-step-indicator{font:11px "JetBrains Mono",monospace;color:var(--abex-green);margin:0 0 20px}
@@ -116,4 +116,7 @@ html.abex-js .abex [data-abe-reveal]{opacity:0;translate:0 38px;transition:opaci
 }
 .abex-skip{position:fixed;left:12px;top:-80px;z-index:2147483000;padding:12px;background:#A7E021;color:#111;font:600 12px Arial}
 .abex-skip:focus{top:12px}
-html:not(.abex-js) .abex [data-abe-reveal]{opacity:1;translate:none}
+html:not(.abex-motion-ready) .abex [data-abe-reveal]{opacity:1;translate:none}
+
+/* Fail open: when reveal finishes, content is always visible regardless of earlier rules. */
+html.abex-motion-ready .abex [data-abe-reveal].visible{opacity:1;translate:0 0}

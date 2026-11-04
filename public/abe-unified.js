@@ -35,6 +35,7 @@ function motion(){
  const els=[...document.querySelectorAll(".abex [data-abe-reveal]")];if(!("IntersectionObserver" in window)||matchMedia("(prefers-reduced-motion: reduce)").matches){els.forEach(e=>e.classList.add("visible"));return}
  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target)}}),{threshold:.09,rootMargin:"0px 0px -28px 0px"});
  els.forEach(e=>obs.observe(e));
+ document.documentElement.classList.add("abex-motion-ready");
  document.querySelectorAll(".abex-card").forEach(card=>{if(card.dataset.tilt)return;card.dataset.tilt="1";
  card.addEventListener("pointermove",e=>{if(e.pointerType==="touch")return;const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.setProperty("--tiltx",(-y*2.7)+"deg");card.style.setProperty("--tilty",(x*3.4)+"deg")});
  card.addEventListener("pointerleave",()=>{card.style.setProperty("--tiltx","0deg");card.style.setProperty("--tilty","0deg")});
